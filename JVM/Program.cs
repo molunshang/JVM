@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using JVM.Entry;
 
 namespace JVM
 {
@@ -6,7 +8,10 @@ namespace JVM
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var jrePath = Environment.GetEnvironmentVariable("JAVA_HOME");
+            var entry = EntryFactory.CreateEntry(Path.Combine(jrePath, "jre"));
+            var data = entry.ReadClass("java.lang.Object");
+            Console.WriteLine(data);
         }
     }
 }
