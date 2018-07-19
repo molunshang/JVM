@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
+using JVM.Class.Constant;
 
 namespace JVM.Class
 {
@@ -39,6 +41,20 @@ namespace JVM.Class
         /// </summary>
         public MemberInfo[] Methods { get; set; }
         public AttributeInfo[] Attributes { get; private set; }
+        public string ClassName { get; set; }
+        public string SuperClassName { get; set; }
+        public string[] InterfaceNames { get; set; }
+
+        private static AttributeInfo[] ReadAttributes(ClassReader reader, ConstantPool constantPool)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static MemberInfo[] ReadMembers(ClassReader reader, ConstantPool constantPool)
+        {
+            throw new NotImplementedException();
+        }
+
         public static ClassFile Parse(ClassReader reader)
         {
             var magic = reader.ReadU4();
@@ -46,13 +62,40 @@ namespace JVM.Class
             {
                 throw new Exception("java.lang.ClassFormatError:magic");
             }
+            ushort minorVersion = reader.ReadU2(), majorVersion = reader.ReadU2();
+            switch (majorVersion)
+            {
+                case Constants.JDK2_MajorVersion:
+                case Constants.JDK3_MajorVersion:
+                case Constants.JDK4_MajorVersion:
+                case Constants.JDK5_MajorVersion:
+                case Constants.JDK6_MajorVersion:
+                case Constants.JDK7_MajorVersion:
+                case Constants.JDK8_MajorVersion:
+                    if (minorVersion != 0)
+                    {
+                        throw new Exception("java.lang.UnsupportedClassVersionError!");
+                    }
+                    break;
+                default:
+                    throw new Exception("java.lang.UnsupportedClassVersionError!");
+            }
 
             var classFile = new ClassFile();
+            classFile.ConstantPool = new ConstantPool(reader);
             classFile.AccessFlags = reader.ReadU2();
+            classFile.ThisClass = reader.ReadU2();
             classFile.SuperClass = reader.ReadU2();
             classFile.Interfaces = reader.ReadU2S();
-            classFile.Attributes = new AttributeInfo[0];
+            classFile.Fields = ReadMembers(reader, classFile.ConstantPool);
+            classFile.Methods = ReadMembers(reader, classFile.ConstantPool);
+            classFile.Attributes = ReadAttributes(reader, classFile.ConstantPool);
+            classFile.ClassName = classFile.ConstantPool.GetClassName(classFile.ThisClass);
+            classFile.SuperClassName = classFile.ConstantPool.GetClassName(classFile.SuperClass);
+            classFile.InterfaceNames = classFile.Interfaces.Select(index => classFile.ConstantPool.GetClassName(index)).ToArray();
             return classFile;
         }
+
+
     }
 }
