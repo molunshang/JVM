@@ -5,14 +5,14 @@ namespace JVM.Class.Constant
 {
     public class ConstantInfoFactory
     {
-        public static IConstantInfo CreateConstantInfo(ClassReader reader)
+        public static IConstantInfo CreateConstantInfo(ClassReader reader, ConstantPool pool)
         {
             var tag = reader.ReadU1();
             var type = (ConstantType)tag;
             switch (type)
             {
                 case ConstantType.Class:
-                    break;
+                    return new ClassConstantInfo(pool, reader.ReadU2());
                 case ConstantType.FieldRef:
                     break;
                 case ConstantType.MethodRef:
@@ -20,19 +20,19 @@ namespace JVM.Class.Constant
                 case ConstantType.InterfaceMethodRef:
                     break;
                 case ConstantType.String:
-                    break;
+                    return new StringConstantInfo(pool, reader.ReadU2());
                 case ConstantType.Integer:
-                    return new IntegerConstantInfo(reader.ReadBytes(4));
+                    return new IntegerConstantInfo(reader.ReadInt());
                 case ConstantType.Float:
-                    return new FloatConstantInfo(reader.ReadBytes(4));
+                    return new FloatConstantInfo(reader.ReadFloat());
                 case ConstantType.Long:
-                    return new LongConstantInfo(reader.ReadBytes(8));
+                    return new LongConstantInfo(reader.ReadLong());
                 case ConstantType.Double:
-                    break;
+                    return new DoubleConstantInfo(reader.ReadDouble());
                 case ConstantType.NameAndType:
-                    break;
+                    return new NameAndTypeConstantInfo(reader.ReadU2(), reader.ReadU2());
                 case ConstantType.Utf8:
-                    break;
+                    return new Utf8ConstantInfo(reader.ReadUTF());
                 case ConstantType.MethodHandle:
                     break;
                 case ConstantType.MethodType:

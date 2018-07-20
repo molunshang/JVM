@@ -5,9 +5,9 @@
         public ConstantType Type => ConstantType.Integer;
         public int Data { get; private set; }
 
-        public IntegerConstantInfo(byte[] bytes)
+        public IntegerConstantInfo(int val)
         {
-            //Data = val;
+            Data = val;
         }
     }
 }

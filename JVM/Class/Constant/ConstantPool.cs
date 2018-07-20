@@ -1,4 +1,5 @@
 ﻿using System;
+using JVM.Class.Constant.Impl;
 
 namespace JVM.Class.Constant
 {
@@ -11,7 +12,7 @@ namespace JVM.Class.Constant
             _constantInfos = new IConstantInfo[count];
             for (int i = 1; i < _constantInfos.Length; i++)
             {
-                _constantInfos[i] = ConstantInfoFactory.CreateConstantInfo(reader);
+                _constantInfos[i] = ConstantInfoFactory.CreateConstantInfo(reader, this);
                 if (_constantInfos[i].Type == ConstantType.Double || _constantInfos[i].Type == ConstantType.Long)
                 {
                     i++;
@@ -24,18 +25,22 @@ namespace JVM.Class.Constant
             {
                 return string.Empty;
             }
-            throw new NotImplementedException();
-
+            return ((ClassConstantInfo)_constantInfos[classIndex]).Name;
         }
 
         public string GetUtf8String(ushort classIndex)
         {
-            throw new NotImplementedException();
+            if (classIndex == 0)
+            {
+                return string.Empty;
+            }
+            return ((Utf8ConstantInfo)_constantInfos[classIndex]).Value;
         }
 
         public (string Name, string Type) GetNameAndType(ushort index)
         {
-            throw new NotImplementedException();
+            var nameAndType = (NameAndTypeConstantInfo)_constantInfos[index];
+            return (this.GetUtf8String(nameAndType.NameIndex), this.GetUtf8String(nameAndType.DescriptorIndex));
         }
     }
 }

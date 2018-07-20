@@ -5,9 +5,9 @@
         public ConstantType Type => ConstantType.Float;
         public float Value { get; }
 
-        public FloatConstantInfo(byte[] bytes)
+        public FloatConstantInfo(float val)
         {
-            //Value = val;
+            Value = val;
         }
     }
 }

@@ -3,11 +3,11 @@
     public class LongConstantInfo : IConstantInfo
     {
         public ConstantType Type => ConstantType.Long;
-        public int Value { get; }
+        public long Value { get; }
 
-        public LongConstantInfo(byte[] bytes)
+        public LongConstantInfo(long val)
         {
-            //Value = val;
+            Value = val;
         }
     }
 }
