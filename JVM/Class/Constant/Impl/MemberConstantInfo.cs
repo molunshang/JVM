@@ -21,7 +21,7 @@
             }
         }
 
-        public string Type
+        public string MemberType
         {
             get
             {

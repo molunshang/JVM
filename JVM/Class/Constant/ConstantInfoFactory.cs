@@ -5,6 +5,21 @@ namespace JVM.Class.Constant
 {
     public class ConstantInfoFactory
     {
+        public static IConstantInfo[] CreateConstantInfos(ClassReader reader, ConstantPool pool)
+        {
+            var count = reader.ReadU2();
+            var infos = new IConstantInfo[count];
+            for (int i = 1; i < infos.Length; i++)
+            {
+                infos[i] = ConstantInfoFactory.CreateConstantInfo(reader, pool);
+                if (infos[i].Type == ConstantType.Double || infos[i].Type == ConstantType.Long)
+                {
+                    i++;
+                }
+            }
+            return infos;
+        }
+
         public static IConstantInfo CreateConstantInfo(ClassReader reader, ConstantPool pool)
         {
             var tag = reader.ReadU1();
@@ -14,11 +29,11 @@ namespace JVM.Class.Constant
                 case ConstantType.Class:
                     return new ClassConstantInfo(pool, reader.ReadU2());
                 case ConstantType.FieldRef:
-                    break;
+                    return new FieldRefConstantInfo(pool, reader.ReadU2(), reader.ReadU2());
                 case ConstantType.MethodRef:
-                    break;
+                    return new MethodRefConstantInfo(pool, reader.ReadU2(), reader.ReadU2());
                 case ConstantType.InterfaceMethodRef:
-                    break;
+                    return new InterfaceMethodRefConstantInfo(pool, reader.ReadU2(), reader.ReadU2());
                 case ConstantType.String:
                     return new StringConstantInfo(pool, reader.ReadU2());
                 case ConstantType.Integer:

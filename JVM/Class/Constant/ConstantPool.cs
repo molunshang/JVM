@@ -8,17 +8,18 @@ namespace JVM.Class.Constant
         private IConstantInfo[] _constantInfos;
         public ConstantPool(ClassReader reader)
         {
-            var count = reader.ReadU2();
-            _constantInfos = new IConstantInfo[count];
-            for (int i = 1; i < _constantInfos.Length; i++)
-            {
-                _constantInfos[i] = ConstantInfoFactory.CreateConstantInfo(reader, this);
-                if (_constantInfos[i].Type == ConstantType.Double || _constantInfos[i].Type == ConstantType.Long)
-                {
-                    i++;
-                }
-            }
+            _constantInfos = ConstantInfoFactory.CreateConstantInfos(reader, this);
         }
+
+        public IConstantInfo GetConstant(ushort index)
+        {
+            if (index <= 0 || index >= _constantInfos.Length)
+            {
+                return null;
+            }
+            return _constantInfos[index];
+        }
+
         public string GetClassName(ushort classIndex)
         {
             if (classIndex == 0)

@@ -6,7 +6,7 @@
         public ushort NameIndex { get; }
         public ushort DescriptorIndex { get; }
 
-        public NameAndTypeConstantInfo(int name, int desc)
+        public NameAndTypeConstantInfo(ushort name, ushort desc)
         {
             NameIndex = name;
             DescriptorIndex = desc;

@@ -3,11 +3,9 @@
     public abstract class AbstractConstantInfo
     {
         protected ConstantPool ConstantPool { get; }
-        protected ushort Index { get; }
-        public AbstractConstantInfo(ConstantPool pool, ushort index)
+        public AbstractConstantInfo(ConstantPool pool)
         {
             ConstantPool = pool;
-            Index = index;
         }
     }
 }
