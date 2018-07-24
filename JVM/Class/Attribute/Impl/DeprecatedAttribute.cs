@@ -1,6 +1,7 @@
-using JVM.Class.Attribute;
-
-public class DeprecatedAttribute : IAttribute
+namespace JVM.Class.Attribute.Impl
 {
-    public AttributeType Type => AttributeType.Deprecated;
+    public class DeprecatedAttribute : IAttribute
+    {
+        public AttributeType Type => AttributeType.Deprecated;
+    }
 }

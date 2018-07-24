@@ -1,12 +1,14 @@
-using JVM.Class.Attribute;
 using JVM.Class.Constant;
 
-public class ConstantValueAttribute : IAttribute
+namespace JVM.Class.Attribute.Impl
 {
-    public AttributeType Type => AttributeType.ConstantValue;
-    public IConstantInfo ConstantValue { get; }
-    public ConstantValueAttribute(IConstantInfo constantInfo)
+    public class ConstantValueAttribute : IAttribute
     {
-        ConstantValue = constantInfo;
+        public AttributeType Type => AttributeType.ConstantValue;
+        public IConstantInfo ConstantValue { get; }
+        public ConstantValueAttribute(IConstantInfo constantInfo)
+        {
+            ConstantValue = constantInfo;
+        }
     }
 }

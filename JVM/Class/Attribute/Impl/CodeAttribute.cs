@@ -1,6 +1,3 @@
-using JVM.Class.Attribute;
-using JVM.Class.Constant;
-
 namespace JVM.Class.Attribute.Impl
 {
     public class CodeAttribute : IAttribute
@@ -13,6 +10,11 @@ namespace JVM.Class.Attribute.Impl
         public IAttribute[] Attributes { get; }
         public CodeAttribute(ushort stack, ushort local, byte[] code, ExceptionTable[] exceptions, IAttribute[] attributes)
         {
+            MaxStack = stack;
+            MaxLocals = local;
+            Code = code;
+            ExceptionTables = exceptions;
+            Attributes = attributes;
         }
     }
 }

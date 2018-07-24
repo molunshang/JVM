@@ -3,15 +3,15 @@ using JVM.Class.Constant.Impl;
 
 namespace JVM.Class.Constant
 {
-    public class ConstantInfoFactory
+    public static class ConstantInfoFactory
     {
-        public static IConstantInfo[] CreateConstantInfos(ClassReader reader, ConstantPool pool)
+        public static IConstantInfo[] ReadConstantInfos(this ClassReader reader, ConstantPool pool)
         {
             var count = reader.ReadU2();
             var infos = new IConstantInfo[count];
             for (int i = 1; i < infos.Length; i++)
             {
-                infos[i] = ConstantInfoFactory.CreateConstantInfo(reader, pool);
+                infos[i] = reader.ReadConstantInfo(pool);
                 if (infos[i].Type == ConstantType.Double || infos[i].Type == ConstantType.Long)
                 {
                     i++;
@@ -20,7 +20,7 @@ namespace JVM.Class.Constant
             return infos;
         }
 
-        public static IConstantInfo CreateConstantInfo(ClassReader reader, ConstantPool pool)
+        public static IConstantInfo ReadConstantInfo(this ClassReader reader, ConstantPool pool)
         {
             var tag = reader.ReadU1();
             var type = (ConstantType)tag;

@@ -9,6 +9,7 @@
         ConstantValue,
         Exceptions,
         LineNumberTable,
-        LocalVariableTable
+        LocalVariableTable,
+        Unparsed
     }
 }

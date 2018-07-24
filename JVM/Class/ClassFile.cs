@@ -1,18 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
+using JVM.Class.Attribute;
 using JVM.Class.Constant;
 
 namespace JVM.Class
 {
     public class ClassFile
     {
-        /// <summary>
-        /// 魔数（文件类型标识）
-        /// </summary>
-        public uint Magic { get; set; }
         /// <summary>
         /// 版本号
         /// </summary>
@@ -40,20 +34,10 @@ namespace JVM.Class
         /// 成员方法信息
         /// </summary>
         public MemberInfo[] Methods { get; set; }
-        public AttributeInfo[] Attributes { get; private set; }
+        public IAttribute[] Attributes { get; set; }
         public string ClassName { get; set; }
         public string SuperClassName { get; set; }
         public string[] InterfaceNames { get; set; }
-
-        private static AttributeInfo[] ReadAttributes(ClassReader reader, ConstantPool constantPool)
-        {
-            throw new NotImplementedException();
-        }
-
-        private static MemberInfo[] ReadMembers(ClassReader reader, ConstantPool constantPool)
-        {
-            throw new NotImplementedException();
-        }
 
         public static ClassFile Parse(ClassReader reader)
         {
@@ -80,18 +64,22 @@ namespace JVM.Class
                 default:
                     throw new Exception("java.lang.UnsupportedClassVersionError!");
             }
-
-            var classFile = new ClassFile();
-            classFile.ConstantPool = new ConstantPool(reader);
-            classFile.AccessFlags = reader.ReadU2();
-            classFile.ThisClass = reader.ReadU2();
-            classFile.SuperClass = reader.ReadU2();
-            classFile.Interfaces = reader.ReadU2S();
-            classFile.Fields = ReadMembers(reader, classFile.ConstantPool);
-            classFile.Methods = ReadMembers(reader, classFile.ConstantPool);
-            classFile.Attributes = ReadAttributes(reader, classFile.ConstantPool);
-            classFile.ClassName = classFile.ConstantPool.GetClassName(classFile.ThisClass);
-            classFile.SuperClassName = classFile.ConstantPool.GetClassName(classFile.SuperClass);
+            var pool = new ConstantPool(reader);
+            var classFile = new ClassFile
+            {
+                MinorVersion = minorVersion,
+                MajorVersion = majorVersion,
+                ConstantPool = pool,
+                AccessFlags = reader.ReadU2(),
+                ThisClass = reader.ReadU2(),
+                SuperClass = reader.ReadU2(),
+                Interfaces = reader.ReadU2S()
+            };
+            classFile.ClassName = pool.GetClassName(classFile.ThisClass);
+            classFile.SuperClassName = pool.GetClassName(classFile.SuperClass);
+            classFile.Fields = MemberInfo.ReadMembers(reader, classFile.ConstantPool);
+            classFile.Methods = MemberInfo.ReadMembers(reader, classFile.ConstantPool);
+            classFile.Attributes = reader.ReadAttributes(classFile.ConstantPool);
             classFile.InterfaceNames = classFile.Interfaces.Select(index => classFile.ConstantPool.GetClassName(index)).ToArray();
             return classFile;
         }

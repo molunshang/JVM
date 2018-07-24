@@ -1,14 +1,13 @@
-﻿using System;
-using JVM.Class.Constant.Impl;
+﻿using JVM.Class.Constant.Impl;
 
 namespace JVM.Class.Constant
 {
     public class ConstantPool
     {
-        private IConstantInfo[] _constantInfos;
+        private readonly IConstantInfo[] _constantInfos;
         public ConstantPool(ClassReader reader)
         {
-            _constantInfos = ConstantInfoFactory.CreateConstantInfos(reader, this);
+            _constantInfos = reader.ReadConstantInfos(this);
         }
 
         public IConstantInfo GetConstant(ushort index)

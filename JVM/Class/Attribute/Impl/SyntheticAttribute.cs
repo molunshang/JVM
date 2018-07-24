@@ -1,6 +1,7 @@
-using JVM.Class.Attribute;
-
-public class SyntheticAttribute : IAttribute
+namespace JVM.Class.Attribute.Impl
 {
-    public AttributeType Type => AttributeType.Synthetic;
+    public class SyntheticAttribute : IAttribute
+    {
+        public AttributeType Type => AttributeType.Synthetic;
+    }
 }
