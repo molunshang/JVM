@@ -5,6 +5,10 @@
         Code,
         Deprecated,
         Synthetic,
-        SourceFile
+        SourceFile,
+        ConstantValue,
+        Exceptions,
+        LineNumberTable,
+        LocalVariableTable
     }
 }
